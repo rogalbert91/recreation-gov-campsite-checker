@@ -21,6 +21,7 @@ LOG.addHandler(sh)
 BASE_URL = "https://www.recreation.gov"
 AVAILABILITY_ENDPOINT = "/api/camps/availability/campground/"
 MAIN_PAGE_ENDPOINT = "/api/camps/campgrounds/"
+PERMITS_ENDPOINT = "/api/permits/"
 
 INPUT_DATE_FORMAT = "%Y-%m-%d"
 ISO_DATE_FORMAT_REQUEST = "%Y-%m-%dT00:00:00.000Z"
@@ -53,7 +54,7 @@ def send_request(url, params):
     return resp.json()
 
 
-def get_park_information(park_id, start_date, end_date, campsite_type=None):
+def get_park_information(park_id, start_date, end_date, campsite_type="STANDARD NONELECTRIC"):
     """
     This function consumes the user intent, collects the necessary information
     from the recreation.gov API, and then presents it in a nice format for the
@@ -119,7 +120,14 @@ def get_num_available_sites(park_information, start_date, end_date, nights=None)
 
     num_available = 0
     num_days = (end_date - start_date).days
-    dates = [end_date - timedelta(days=i) for i in range(1, num_days + 1)]
+
+    dates0 = [end_date - timedelta(days=i) for i in range(1, num_days + 1)]
+    dates = []
+    for d in dates0 :
+        if (d.weekday() > 3 and d.weekday() <= 6) :
+            dates.append(d)
+            # LOG.debug("hola : {}".format(format_date(d, format_string=ISO_DATE_FORMAT_RESPONSE)))
+
     dates = set(format_date(i, format_string=ISO_DATE_FORMAT_RESPONSE) for i in dates)
 
     if nights not in range(1, num_days + 1):
@@ -240,7 +248,7 @@ if __name__ == "__main__":
         type=int,
     )
     parks_group.add_argument(
-        "--stdin",
+        "--stdi",
         "-",
         action="store_true",
         help="Read list of park ID(s) from stdin instead",
@@ -250,6 +258,7 @@ if __name__ == "__main__":
 
     if args.debug:
         LOG.setLevel(logging.DEBUG)
+
 
     parks = args.parks or [p.strip() for p in sys.stdin]
 
