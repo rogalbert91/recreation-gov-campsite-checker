@@ -5,7 +5,7 @@ import json
 import logging
 import sys
 from datetime import date, datetime, timedelta
-from dateutil import rrule
+from dateutil import rrule, relativedelta
 from itertools import count, groupby
 
 import requests
@@ -63,7 +63,7 @@ def get_park_information(park_id, start_date, end_date, campsite_type="STANDARD 
 
     The only API to get availability information is the `month?` query param
     on the availability endpoint. You must query with the first of the month.
-    This means if `start_date` and `end_date` cross a month bounday, we must
+    This means if `start_date` and `end_date` cross a month boundary, we must
     hit the endpoint multiple times.
 
     The output of this function looks like this:
@@ -161,9 +161,22 @@ def consecutive_nights(available, nights):
 def main(parks):
     out = []
     availabilities = False
+
+    # start_date = datetime.today()
+    # end_date = start_date
+
+    if args.start_date == None or args.end_date == None:
+        start_date = datetime.today()
+        end_date = start_date + relativedelta.relativedelta(months=+6)
+    else :
+        start_date = args.start_date
+        end_date = args.end_date
+
+    LOG.debug("StartDate: {}, EndDate: {}".format(start_date, end_date))
+        
     for park_id in parks:
         park_information = get_park_information(
-            park_id, args.start_date, args.end_date, args.campsite_type
+            park_id, start_date, end_date, args.campsite_type
         )
         LOG.debug(
             "Information for park {}: {}".format(
@@ -172,7 +185,7 @@ def main(parks):
         )
         name_of_site = get_name_of_site(park_id)
         current, maximum = get_num_available_sites(
-            park_information, args.start_date, args.end_date, nights=args.nights
+            park_information, start_date, end_date, nights=args.nights
         )
         if current:
             emoji = SUCCESS_EMOJI
@@ -189,8 +202,8 @@ def main(parks):
     if availabilities:
         print(
             "There are campsites available from {} to {}!!!".format(
-                args.start_date.strftime(INPUT_DATE_FORMAT),
-                args.end_date.strftime(INPUT_DATE_FORMAT),
+                start_date.strftime(INPUT_DATE_FORMAT),
+                end_date.strftime(INPUT_DATE_FORMAT),
             )
         )
     else:
@@ -218,11 +231,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", "-d", action="store_true", help="Debug log level")
     parser.add_argument(
-        "--start-date", required=True, help="Start date [YYYY-MM-DD]", type=valid_date
+        "--start-date", help="Start date [YYYY-MM-DD]", type=valid_date
     )
     parser.add_argument(
         "--end-date",
-        required=True,
         help="End date [YYYY-MM-DD]. You expect to leave this day, not stay the night.",
         type=valid_date,
     )

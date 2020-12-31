@@ -1,7 +1,9 @@
-/myvenv/
 __pycache__
 /next*
 /tweetlog
 /twitter_credentials.py
 /twitter_credentials.json
 *.swp
+campsitechecker/
+CAMP/
+cron.log
