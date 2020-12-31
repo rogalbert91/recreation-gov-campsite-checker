@@ -162,9 +162,6 @@ def main(parks):
     out = []
     availabilities = False
 
-    # start_date = datetime.today()
-    # end_date = start_date
-
     if args.start_date == None or args.end_date == None:
         start_date = datetime.today()
         end_date = start_date + relativedelta.relativedelta(months=+6)
