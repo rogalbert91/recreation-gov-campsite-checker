@@ -85,3 +85,20 @@ You'll want to make the app on another account (like a bot account), not your ow
 I left my API keys in here but don't exploit them ty thanks.
 
 **Thanks to https://github.com/bri-bri/yosemite-camping for getting me most of the way there for the old version.**
+
+## Notes 2020-06-24
+
+They changed the API. There is this search endpoint that enables you to see how many sites are available in a date range, but this wouldn't be compatible with the `--nights` feature.
+
+```
+https://www.recreation.gov/api/search?fq=asset_id%3A231946&start=0&start_date=2020-07-14T00%3A00%3A00.000Z&end_date=2020-07-17T00%3A00%3A00.000Z&include_unavailable=true
+
+            "availability": "available",
+            "availability_counts": {
+                "Available": 27
+            },
+```
+## Future Awesome from Betangas & ChiChi
+
+* Read campground ids from Google Doc instead of static file
+* https://www.recreation.gov/api/permits/234652 for Half Dome permits
