@@ -33,7 +33,7 @@ xxx, Atwell Mill
 232761, Ellery Creek (Redding)
 234524, Juniper Lake Group
 234467, Mccarthy Point Lookout
-262790, Mattole Campground (King Range)
+xxx, Mattole Campground (King Range)
 234403, Girard Ridge Lookout
 xxx, Burney Falls Area
 234600, Pine Mountain Lookout
