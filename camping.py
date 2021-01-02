@@ -126,7 +126,6 @@ def get_num_available_sites(park_information, start_date, end_date, nights=None)
     for d in dates0 :
         if (d.weekday() > 3 and d.weekday() <= 6) :
             dates.append(d)
-            # LOG.debug("hola : {}".format(format_date(d, format_string=ISO_DATE_FORMAT_RESPONSE)))
 
     dates = set(format_date(i, format_string=ISO_DATE_FORMAT_RESPONSE) for i in dates)
 
@@ -143,7 +142,7 @@ def get_num_available_sites(park_information, start_date, end_date, nights=None)
             desired_available.append(date)
         if desired_available and consecutive_nights(desired_available, nights):
             num_available += 1
-            LOG.debug("Available site {}: {}".format(num_available, site))
+            print("Available site {}: {}".format(num_available, site))
 
     return num_available, maximum
 
@@ -154,8 +153,20 @@ def consecutive_nights(available, nights):
     """
     ordinal_dates = [datetime.strptime(dstr, ISO_DATE_FORMAT_RESPONSE).toordinal() for dstr in available]
     c = count()
-    longest_consecutive = max((list(g) for _, g in groupby(ordinal_dates, lambda x: x-next(c))), key=len)
-    return len(longest_consecutive) >= nights
+    # print("c = {}".format(c))
+    groups = groupby(ordinal_dates, lambda x: x-next(c))
+    ret = 0
+    for key, group in groups:
+      l = list(group)
+      l_len = len(l)
+      if (l_len >= nights):
+        ret = ret + 1
+        l_d = [format_date(datetime.fromordinal(dor), INPUT_DATE_FORMAT) for dor in l]
+        print("Option {} :".format(ret), l_d)
+
+    return ret > 0
+    # longest_consecutive = max((list(g) for _, g in groupby(ordinal_dates, lambda x: x-next(c))), key=len)
+    # return len(longest_consecutive) >= nights
 
 
 def main(parks):
@@ -164,7 +175,7 @@ def main(parks):
 
     if args.start_date == None or args.end_date == None:
         start_date = datetime.today()
-        end_date = start_date + relativedelta.relativedelta(months=+6)
+        end_date = start_date + relativedelta.relativedelta(months=+8)
     else :
         start_date = args.start_date
         end_date = args.end_date
@@ -190,11 +201,16 @@ def main(parks):
         else:
             emoji = FAILURE_EMOJI
 
-        out.append(
-            "{} {} ({}): {} site(s) available out of {} site(s)".format(
-                emoji, name_of_site, park_id, current, maximum
-            )
+        print("{} {} ({}): {} site(s) available out of {} site(s)".format(
+                        emoji, name_of_site, park_id, current, maximum
+                    )
         )
+
+        # out.append(
+        #     "{} {} ({}): {} site(s) available out of {} site(s)".format(
+        #         emoji, name_of_site, park_id, current, maximum
+        #     )
+        # )
 
     if availabilities:
         print(
@@ -205,7 +221,7 @@ def main(parks):
         )
     else:
         print("There are no campsites available :(")
-    print("\n".join(out))
+    # print("\n".join(out))
     return availabilities
 
 
