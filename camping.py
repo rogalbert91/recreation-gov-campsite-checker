@@ -45,12 +45,11 @@ def format_date(date_object, format_string=ISO_DATE_FORMAT_REQUEST):
 def send_request(url, params):
     resp = requests.get(url, params=params, headers=headers)
     if resp.status_code != 200:
-        raise RuntimeError(
-            "failedRequest",
+        print("failedRequest -> " + 
             "ERROR, {} code received from {}: {}".format(
                 resp.status_code, url, resp.text
-            ),
-        )
+            ),)
+        return None
     return resp.json()
 
 
@@ -88,7 +87,8 @@ def get_park_information(park_id, start_date, end_date, campsite_type="STANDARD 
         LOG.debug("Querying for {} with these params: {}".format(park_id, params))
         url = "{}{}{}/month?".format(BASE_URL, AVAILABILITY_ENDPOINT, park_id)
         resp = send_request(url, params)
-        api_data.append(resp)
+        if (resp != None) :
+          api_data.append(resp)
 
     # Collapse the data into the described output format.
     # Filter by campsite_type if necessary.
@@ -112,6 +112,8 @@ def get_park_information(park_id, start_date, end_date, campsite_type="STANDARD 
 def get_name_of_site(park_id):
     url = "{}{}{}".format(BASE_URL, MAIN_PAGE_ENDPOINT, park_id)
     resp = send_request(url, {})
+    if resp == None :
+      return resp
     return resp["campground"]["facility_name"]
 
 
@@ -192,6 +194,8 @@ def main(parks):
             )
         )
         name_of_site = get_name_of_site(park_id)
+        if name_of_site == None :
+          continue
         current, maximum = get_num_available_sites(
             park_information, start_date, end_date, nights=args.nights
         )
@@ -273,7 +277,7 @@ if __name__ == "__main__":
         type=int,
     )
     parks_group.add_argument(
-        "--stdi",
+        "--stdin",
         "-",
         action="store_true",
         help="Read list of park ID(s) from stdin instead",
