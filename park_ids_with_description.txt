@@ -1,0 +1,72 @@
+// Big Sur
+233116, Kirk Creek
+231959, Plaskett Creek
+xxx, Limekiln State Park
+
+// Bay Area
+xxx, Redwood State Parks (multiple)
+233359, Point Reyes
+272229, Bicentennial (Marin headlands)
+
+// Yosemite
+232446, Wawona
+232453, Bridalveil Creek Group and Horse Camp
+xxx, Porcupine Flat
+xxx, White Wolf
+232448, Tuolumne Meadows
+10004152, Camp 4
+232449, North Pines
+232450, Lower Pines
+232447, Upper Pines
+
+// Sequoia National Park
+232461, Lodgepole
+249982, Buckeye Flat
+249979, Potwisha
+233692, Horse Creek
+xxx, Atwell Mill
+234601, Oak Flat Lookout
+
+// North California
+234369, Hirz Mountain Lookout
+234156, Butte Lake (Lassen)
+232761, Ellery Creek (Redding)
+234524, Juniper Lake Group
+234467, Mccarthy Point Lookout
+262790, Mattole Campground (King Range)
+234403, Girard Ridge Lookout
+xxx, Burney Falls Area
+234600, Pine Mountain Lookout
+xxx, Sierra Buttes Lookout
+233296, Black Mountain Lookout
+
+// Kings Canyon National Park
+
+// Eastern Sierras
+232422, Trailhead Group Camp
+232119, Lower Twin Lakes (Bridgeport)
+234330, Silver Lake Campground (June Lake)
+232117, Trumbull Lake (!! Site specific)
+234311, Convict Lake
+234290, Cold Water (Mammoth Lakes)
+233830, Old Shady Rest (Mammoth Lakes)
+
+// Lake Tahoe
+232049, Gerle Creek
+231953, Middle Meadows
+234210, Prosser Family
+232186, Mt Rose
+232874, William Kent
+232768, Nevada Beach
+232769, Fallen Leaf
+232185, Hope Valley
+232263, Silver Lake East (Eldorado)
+272246, Indian Creek
+
+// Central California Coast
+232502, Anacapa Island
+232501, San Miguel Island
+261700, Santa Rosa Island Backcountry Beach Camping
+232497, Santa Rosa Island
+232499, Santa Cruz Del Norte Backcountry
+232498, Santa Cruz Scorpion
