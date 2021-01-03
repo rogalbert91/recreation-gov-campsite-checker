@@ -5,6 +5,7 @@ import json
 import logging
 import sys
 import time
+import os.path
 from datetime import date, datetime, timedelta
 from dateutil import rrule, relativedelta
 from itertools import count, groupby
@@ -34,6 +35,13 @@ FAILURE_EMOJI = "❌"
 DELAY_TIME_SEC = 20
 
 headers = {"User-Agent": UserAgent().random}
+
+
+def is_valid_file(parser, arg):
+    if not os.path.exists(arg):
+        parser.error("The file %s does not exist!" % arg)
+    else:
+        return open(arg, 'r')  # return an open file handle
 
 
 def format_date(date_object, format_string=ISO_DATE_FORMAT_REQUEST):
@@ -282,10 +290,12 @@ if __name__ == "__main__":
         type=int,
     )
     parks_group.add_argument(
-        "--parks_file_path",
+        "--parks_file",
         "-f",
-        action="store_true",
+        dest="parks_file",
+        metavar="FILE",
         help="Read list of park ID(s) from json file",
+        type=lambda x: is_valid_file(parser, x)
     )
 
     args = parser.parse_args()
@@ -297,19 +307,20 @@ if __name__ == "__main__":
     if args.parks != None :
         parks = args.parks
     else :
-        with open(args.parks_file_path) as f:
-            parks_dict = json.load(f)
-            parks_json = True
+        parks_dict = json.load(args.parks_file)
+        parks_json = True
 
     if parks_json :
+        code = 0
         for park in parks_dict.keys() :
             print("Searching {}".format(park))
             try:
-                code = 0 if main(parks_dict[park]) else 1
-                sys.exit(code)
+                code = (code + 0) if main(parks_dict[park]) else (code + 1)
             except Exception:
                 print("Something went wrong")
                 LOG.exception("Something went wrong")
+
+        sys.exit(code)
 
     else :
       try:
