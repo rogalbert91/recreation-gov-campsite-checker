@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from datetime import date, datetime, timedelta
 from dateutil import rrule, relativedelta
 from itertools import count, groupby
@@ -29,6 +30,8 @@ ISO_DATE_FORMAT_RESPONSE = "%Y-%m-%dT00:00:00Z"
 
 SUCCESS_EMOJI = "🏕"
 FAILURE_EMOJI = "❌"
+
+DELAY_TIME_SEC = 20
 
 headers = {"User-Agent": UserAgent().random}
 
@@ -209,6 +212,8 @@ def main(parks):
                         emoji, name_of_site, park_id, current, maximum
                     )
         )
+
+        time.sleep(DELAY_TIME_SEC)
 
         # out.append(
         #     "{} {} ({}): {} site(s) available out of {} site(s)".format(

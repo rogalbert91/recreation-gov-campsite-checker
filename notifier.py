@@ -11,7 +11,7 @@ import twitter
 
 MAX_TWEET_LENGTH = 279
 DELAY_FILE_TEMPLATE = "next_{}.txt"
-DELAY_TIME = 1800
+DELAY_TIME_SEC = 1800
 CREDENTIALS_FILE = "twitter_credentials.json"
 
 
@@ -50,13 +50,13 @@ try:
 except:
     call_time = 0
 
-if call_time + random.randint(DELAY_TIME-30, DELAY_TIME+30) > int(time.time()):
+if call_time + random.randint(DELAY_TIME_SEC-30, DELAY_TIME_SEC+30) > int(time.time()):
    print("It is too soon to tweet again") 
    sys.exit(0)
 
 
 if "Something went wrong" in first_line:
-    create_tweet("{}, I'm broken! Please help :'(".format(user))
+    create_tweet("@{}, I'm broken! Please help :'(".format(user))
     sys.exit()
 
 
