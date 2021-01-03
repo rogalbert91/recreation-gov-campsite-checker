@@ -21,10 +21,9 @@ api = twitter.Api(
 
 def create_tweet(tweet):
     lengthLimitedTweet = tweet[:MAX_TWEET_LENGTH]
+    resp = api.PostUpdate(lengthLimitedTweet)
 
-    resp = api.PostUpdate(tweet)
-
-    print("The following was tweeted:")
+    print("The following was tweeted: \n")
     print(lengthLimitedTweet)
 
 def create_custom_tweet():
@@ -35,11 +34,7 @@ def create_custom_tweet():
         tweet = "{}, ".format(user)
     tweet += "{}".format(sys.argv[2])
 
-    lengthLimitedTweet = tweet[:MAX_TWEET_LENGTH]
-    resp = api.PostUpdate(lengthLimitedTweet)
-
-    print("The following was tweeted: \n")
-    print(lengthLimitedTweet)
+    create_tweet(tweet)
 
 def create_campsite_tweet():
     first_line = next(sys.stdin)
@@ -59,6 +54,9 @@ def create_campsite_tweet():
         tweet += first_line.rstrip()
         tweet += " 🏕🏕🏕\n"
         tweet += "\n".join(available_site_strings)
+        if len(sys.argv) == 3 and sys.argv[2][0] == "@":
+            user = sys.argv[2]
+            tweet += ", {}".format(user)
         create_tweet(tweet)
         sys.exit(0)
     else:
