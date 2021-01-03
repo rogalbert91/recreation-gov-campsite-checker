@@ -1,10 +1,6 @@
 # Campsite Availability Scraping
 
-**This has been updated to work with the new recreation.gov site and API!!!**
-
 This script scrapes the https://recreation.gov website for campsite availabilities.
-
-**Note:** Please don't abuse this script. Most folks out there don't know how to run scrapers against websites, so you're at an unfair advantage by using this.
 
 ## Example Usage
 ```
@@ -40,11 +36,10 @@ There are campsites available from 2020-06-01 to 2020-06-30!!!
 ## Getting park IDs
 What you'll want to do is go to https://recreation.gov and search for the campground you want. Click on it in the search sidebar. This should take you to a page for that campground, the URL will look like `https://www.recreation.gov/camping/campgrounds/<number>`. That number is the park ID.
 
-You can also take [this site for a spin](https://pastudan.github.io/national-parks/). Thanks to [pastudan](https://github.com/pastudan)!
 
 ## Installation
 
-I wrote this in Python 3.7 but I've tested it as working with 3.5 and 3.6 also.
+@banool wrote this in Python 3.7 but tested it as working with 3.5 and 3.6 also.
 ```
 python3 -m venv myvenv
 source myvenv/bin/activate
@@ -63,13 +58,6 @@ Note: `black` only really supports 3.6+ so watch out!
 
 Feel free to submit pull requests, or look at the original: https://github.com/bri-bri/yosemite-camping
 
-### Differences from the original
-- Python 3 🐍🐍🐍.
-- Park IDs not hardcoded, passed via the CLI instead.
-- Doesn't give you URLs for campsites with availabilities.
-- Works with any park out of the box, not just those in Yosemite like with the original.
-- **Update 2018-10-21:** Works with the new recreation.gov site.
-
 ## Twitter Notification
 If you want to be notified about campsite availabilities via Twitter (they're the only API out there that is actually easy to use), you can do this:
 1. Make an app via Twitter. It's pretty easy, go to: https://apps.twitter.com/app/new.
@@ -77,14 +65,12 @@ If you want to be notified about campsite availabilities via Twitter (they're th
 3. Pipe the output of your command into `notifier.py`. See below for an example.
 
 ```
-python camping.py --start-date 2018-07-20 --end-date 2018-07-23 70926 70928 | python notifier.py @banool1
+python3 camping.py --nights 2 --parks 233116 | python3 simple-notifier.py tweet
 ```
 
+Optionally, you can tag a user at the end, e.g. `python3 ... tweet @EmpedadorBeto`
+
 You'll want to make the app on another account (like a bot account), not your own, so you get notified when the tweet goes out.
-
-I left my API keys in here but don't exploit them ty thanks.
-
-**Thanks to https://github.com/bri-bri/yosemite-camping for getting me most of the way there for the old version.**
 
 ## Notes 2020-06-24
 
@@ -101,7 +87,11 @@ https://www.recreation.gov/api/search?fq=asset_id%3A231946&start=0&start_date=20
 ## Our Features / To Do
 
 * Integrate with our Twitter notifications
-* If no start or end date given, then default to today + 6 months as time range
-* Output which dates are available for given site numbers
+* If no start or end date given, then default to today + 6 months as time range ✅
+* Output which dates are available for given site numbers ✅
 * 1.0 - update the static file to read from with all campground ids of interest. 2.0 - read campground ids from Google Doc instead of static file
 * Half Dome permits: https://www.recreation.gov/api/permits/234652
+
+## Additional Resources
+* What inspired the original by @banool: https://github.com/bri-bri/yosemite-camping
+* Additional method of finding park IDs: https://pastudan.github.io/national-parks/) from @pastudan
