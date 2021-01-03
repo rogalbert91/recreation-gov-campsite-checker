@@ -8,25 +8,47 @@ CREDENTIALS_FILE = "twitter_credentials.json"
 with open(CREDENTIALS_FILE) as f:
     tc = json.load(f)
 
-def create_tweet(tweet):
-    tweet = tweet[:MAX_TWEET_LENGTH]
-    api = twitter.Api(
-        consumer_key=tc["consumer_key"],
-        consumer_secret=tc["consumer_secret"],
-        access_token_key=tc["access_token_key"],
-        access_token_secret=tc["access_token_secret"],
-    )
-    resp = api.PostUpdate(tweet)
+api = twitter.Api(
+    consumer_key=tc["consumer_key"],
+    consumer_secret=tc["consumer_secret"],
+    access_token_key=tc["access_token_key"],
+    access_token_secret=tc["access_token_secret"],
+)
+
+def create_tweet():
+    tweet = ""
+    # optional direct mention a user
+    if len(sys.argv) == 4 and sys.argv[3][0] == "@":
+        user = sys.argv[3]
+        tweet = "{}, ".format(user)
+    tweet += "{}".format(sys.argv[2])
+
+    lengthLimitedTweet = tweet[:MAX_TWEET_LENGTH]
+    resp = api.PostUpdate(lengthLimitedTweet)
+
     print("The following was tweeted: \n")
-    print(tweet)
+    print(lengthLimitedTweet)
 
-tweet = ""
-# optional direct mention a user
-if len(sys.argv) == 3 and sys.argv[2][0] == "@":
-    user = sys.argv[2]
-    tweet = "{}, ".format(user)
+def send_DM():
+    if sys.argv[3] == None:
+        print("You must provide a user to DM as the third argument.")
+        exit(1)
+    user = sys.argv[3]
+    text = sys.argv[2]
 
-tweet += "{}".format(sys.argv[1])
+    resp = api.PostDirectMessage(user_id=user, text=text, return_json=True)
 
-create_tweet(tweet)
+    print("\nAPI Response:")
+    print(resp)
+    print("\nThe following message was sent to {}:".format(user))
+    print(text)
+
+if sys.argv[1] == "tweet":
+    create_tweet()
+elif sys.argv[1] == "dm":
+    send_DM()
+else:
+    print("The command was not understood. Please either 'tweet' or 'dm', "
+            + "followed by the message content and the name of the user you "
+            + "would like to contact.")
 sys.exit(0)
