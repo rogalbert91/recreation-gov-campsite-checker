@@ -86,7 +86,7 @@ https://www.recreation.gov/api/search?fq=asset_id%3A231946&start=0&start_date=20
 ```
 ## Our Features / To Do
 
-* Integrate with our Twitter notifications
+* Integrate with our Twitter notifications ✅
 * If no start or end date given, then default to today + 6 months as time range ✅
 * Output which dates are available for given site numbers ✅
 * 1.0 - update the static file to read from with all campground ids of interest. 2.0 - read campground ids from Google Doc instead of static file

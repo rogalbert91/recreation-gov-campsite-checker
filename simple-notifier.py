@@ -1,10 +1,11 @@
 import json
 import sys
 import twitter
+import re
 
 from hashlib import md5
 
-from camping import SUCCESS_EMOJI
+from camping import SUCCESS_EMOJI, FAILURE_EMOJI
 
 MAX_TWEET_LENGTH = 279
 CREDENTIALS_FILE = "twitter_credentials.json"
@@ -36,33 +37,32 @@ def create_custom_tweet():
 
     create_tweet(tweet)
 
-def create_campsite_tweet():
+def parse_first_line():
     first_line = next(sys.stdin)
-    first_line_hash = md5(first_line.encode("utf-8")).hexdigest()
+    while FAILURE_EMOJI in first_line:
+        first_line = next(sys.stdin)
+    return first_line
 
-    available_site_strings = []
+def create_campsite_tweet():
+    first_line = parse_first_line()
+
     for line in sys.stdin:
         line = line.strip()
-        if SUCCESS_EMOJI in line:
+        if line == "eof":
+            break
+        elif SUCCESS_EMOJI in line:
             name = " ".join(line.split(":")[0].split(" ")[1:])
             available = line.split(":")[1][1].split(" ")[0]
-            s = "{} site(s) available in {}".format(available, name)
-            available_site_strings.append(s)
+            site_output = "{} site(s) available in {}".format(available, name)
 
-    if available_site_strings:
-        tweet = ""
-        tweet += first_line.rstrip()
-        tweet += " 🏕🏕🏕\n"
-        tweet += "\n".join(available_site_strings)
-        if len(sys.argv) == 3 and sys.argv[2][0] == "@":
-            user = sys.argv[2]
-            tweet += ", {}".format(user)
-        create_tweet(tweet)
-        sys.exit(0)
-    else:
-        print("No campsites available, not tweeting 😞")
-        sys.exit(1)
+            first_available_date = (re.search(r'\[.*\]', first_line)).group()
+            date_output = "Next Available: {}".format(first_available_date)
 
+            create_tweet(site_output + "\n" + date_output + "🏕")
+
+            first_line = parse_first_line()
+
+    sys.exit(0)
 
 def send_DM():
     if sys.argv[3] == None:
