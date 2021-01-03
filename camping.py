@@ -282,24 +282,40 @@ if __name__ == "__main__":
         type=int,
     )
     parks_group.add_argument(
-        "--stdin",
-        "-",
+        "--parks_file_path",
+        "-f",
         action="store_true",
-        help="Read list of park ID(s) from stdin instead",
+        help="Read list of park ID(s) from json file",
     )
 
     args = parser.parse_args()
+    parks_json= False
 
     if args.debug:
         LOG.setLevel(logging.DEBUG)
 
+    if args.parks != None :
+        parks = args.parks
+    else :
+        with open(args.parks_file_path) as f:
+            parks_dict = json.load(f)
+            parks_json = True
 
-    parks = args.parks or [p.strip() for p in sys.stdin]
+    if parks_json :
+        for park in parks_dict.keys() :
+            print("Searching {}".format(park))
+            try:
+                code = 0 if main(parks_dict[park]) else 1
+                sys.exit(code)
+            except Exception:
+                print("Something went wrong")
+                LOG.exception("Something went wrong")
 
-    try:
-        code = 0 if main(parks) else 1
-        sys.exit(code)
-    except Exception:
-        print("Something went wrong")
-        LOG.exception("Something went wrong")
-        raise
+    else :
+      try:
+          code = 0 if main(parks) else 1
+          sys.exit(code)
+      except Exception:
+          print("Something went wrong")
+          LOG.exception("Something went wrong")
+          raise
