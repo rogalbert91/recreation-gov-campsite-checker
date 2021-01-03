@@ -31,7 +31,7 @@ def create_tweet():
 
 def send_DM():
     if sys.argv[3] == None:
-        print("You must provide a user to DM as the third argument.")
+        print("You must provide a user ID as the third argument.")
         exit(1)
     user = sys.argv[3]
     text = sys.argv[2]
@@ -49,6 +49,6 @@ elif sys.argv[1] == "dm":
     send_DM()
 else:
     print("The command was not understood. Please either 'tweet' or 'dm', "
-            + "followed by the message content and the name of the user you "
-            + "would like to contact.")
+            + "followed by the message content and the user information for whom "
+            + "you would like to contact.")
 sys.exit(0)
