@@ -11,16 +11,9 @@ $ python camping.py --start-date 2018-07-20 --end-date 2018-07-23 --parks 232448
 ❌ BASIN MONTANA CAMPGROUND: 0 site(s) available out of 30 site(s)
 ```
 
-You can also read from stdin. Define a file (e.g. `parks.txt`) with IDs like this:
+You can also read from stdin. Define a JSON file (see example in campsites/) and then use it like this:
 ```
-232447
-232449
-232450
-232448
-```
-and then use it like this:
-```
-$ python camping.py --start-date 2018-07-20 --end-date 2018-07-23 --stdin < parks.txt
+$ python3 camping.py --nights 2 --parks_file campsites/park_ids.json
 ```
 
 You'll want to put this script into a 5 minute crontab. You could also grep the output for the success emoji (🏕) and then do something in response, like notify you that there is a campsite available. See the "Twitter Notification" section below.
@@ -65,7 +58,9 @@ If you want to be notified about campsite availabilities via Twitter (they're th
 3. Pipe the output of your command into `notifier.py`. See below for an example.
 
 ```
-python3 camping.py --nights 2 --parks 233116 | python3 simple-notifier.py tweet
+$ python3 camping.py --nights 2 --parks 233116 | python3 simple-notifier.py tweet
+
+$ python3 camping.py --nights 2 --parks_file campsites/park_ids.json | python3 simple-notifier.py tweet
 ```
 
 Optionally, you can tag a user at the end, e.g. `python3 ... tweet @EmpedadorBeto`
