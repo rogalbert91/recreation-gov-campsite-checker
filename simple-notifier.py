@@ -21,7 +21,7 @@ api = twitter.Api(
 )
 
 def create_tweet(tweet):
-    lengthLimitedTweet = tweet[:MAX_TWEET_LENGTH]
+    lengthLimitedTweet = tweet[:MAX_TWEET_LENGTH-3] + "..."
     resp = api.PostUpdate(lengthLimitedTweet)
 
     print("The following was tweeted: \n")
@@ -37,30 +37,47 @@ def create_custom_tweet():
 
     create_tweet(tweet)
 
-def parse_first_line():
-    first_line = next(sys.stdin)
-    while FAILURE_EMOJI in first_line:
-        first_line = next(sys.stdin)
-    return first_line
+def parse_first_option_per_site():
+    next_available_dates = []
+    line = next(sys.stdin)
+
+    while SUCCESS_EMOJI not in line:
+        if line == "~eof~":
+            break
+
+        available_date = (re.search(r'Option 1[\:\s].+(\[.*\])', line))
+        if available_date != None: # there is a match
+            parsed_date = available_date.group(1)
+            if parsed_date not in next_available_dates: # prevent adding duplicate dates
+                next_available_dates.append(parsed_date)
+        line = next(sys.stdin)
+
+    return next_available_dates
 
 def create_campsite_tweet():
-    first_line = parse_first_line()
+    # Available dates for first campsite
+    first_line = next(sys.stdin)
+    available_dates = parse_first_option_per_site()
 
     for line in sys.stdin:
         line = line.strip()
-        if line == "eof":
-            break
-        elif SUCCESS_EMOJI in line:
+
+        if SUCCESS_EMOJI in line:
             name = " ".join(line.split(":")[0].split(" ")[1:])
             available = line.split(":")[1][1].split(" ")[0]
             site_output = "{} site(s) available in {}".format(available, name)
 
-            first_available_date = (re.search(r'\[.*\]', first_line)).group()
-            date_output = "Next Available: {}".format(first_available_date)
+            date_output = "Next Available:\n"
+            for date in available_dates:
+                date_output += "{}\n".format(date)
+
+            print(site_output)
+            print(date_output)
 
             create_tweet(site_output + "\n" + date_output + "🏕")
 
-            first_line = parse_first_line()
+            # Find available dates for the next campsite (to loop again)
+            available_dates = parse_first_option_per_site()
 
     sys.exit(0)
 
