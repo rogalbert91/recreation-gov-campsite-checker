@@ -320,11 +320,13 @@ if __name__ == "__main__":
                 print("Something went wrong")
                 LOG.exception("Something went wrong")
 
+        print("~eof~")
         sys.exit(code)
 
     else :
       try:
           code = 0 if main(parks) else 1
+          print("~eof~")
           sys.exit(code)
       except Exception:
           print("Something went wrong")
