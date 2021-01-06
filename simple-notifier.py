@@ -50,7 +50,7 @@ def create_campsite_tweet():
 
         elif SUCCESS_EMOJI in line:
             name = " ".join(line.split(":")[0].split(" ")[1:])
-            available = line.split(":")[1][1].split(" ")[0]
+            available = line.split(":")[1].split(" ")[1]
             site_output = "{} site(s) available in {}".format(available, name)
 
             date_output = ""
