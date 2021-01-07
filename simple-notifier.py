@@ -24,10 +24,14 @@ def create_tweet(tweet):
     if len(tweet) > MAX_TWEET_LENGTH:
         tweet = tweet[:MAX_TWEET_LENGTH-4] + " ..."
 
-    resp = api.PostUpdate(tweet)
+    try:
+        resp = api.PostUpdate(tweet)
 
-    print("The following was tweeted: \n")
-    print(tweet)
+        print("The following was tweeted: \n")
+        print(tweet)
+    except Exception as err:
+        site = re.search(r'.*\savailable\sin\s(.*\(.*\))', tweet).group(1)
+        print("Exception: {} for {}".format(err, site))
 
 def create_custom_tweet():
     tweet = ""
