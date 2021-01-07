@@ -8,7 +8,7 @@ from hashlib import md5
 from camping import SUCCESS_EMOJI, FAILURE_EMOJI
 
 MAX_TWEET_LENGTH = 279
-CREDENTIALS_FILE = "twitter_credentials.json"
+CREDENTIALS_FILE = "./twitter_credentials.json"
 
 with open(CREDENTIALS_FILE) as f:
     tc = json.load(f)
